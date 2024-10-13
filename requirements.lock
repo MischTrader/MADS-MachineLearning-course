@@ -313,7 +313,6 @@ tensorboardx==2.6.2.2
 threadpoolctl==3.5.0
     # via scikit-learn
 torch==2.3.0
-    # via mads-datasets
     # via mltrainer
     # via torchtext
     # via torchvision

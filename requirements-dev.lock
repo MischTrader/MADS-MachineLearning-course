@@ -541,7 +541,6 @@ tomli==2.0.1 ; python_full_version < '3.11'
     # via jupyterlab
     # via mypy
 torch==2.3.0
-    # via mads-datasets
     # via mltrainer
     # via torchtext
     # via torchvision
