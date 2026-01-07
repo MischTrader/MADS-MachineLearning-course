@@ -17,28 +17,42 @@ def main() -> None:
     base_cfg = TrainConfig(
         epochs=5,
         batch_size=64,
-        weight_decay=1e-4,   # constant houden voor deze exercise
+        weight_decay=1e-4,
         base_channels=16,
-        dropout=0.0,
+        dropout=0.0,          # baseline
+        norm=None,            # baseline
         log_root=Path("runs/grid"),
         seed=42,
     )
 
-    # Grid over twee hyperparameters (interactie!)
+    # Grid: leerbaar maar beheersbaar
     lr_grid = [1e-2, 3e-3, 1e-3]
     fc_units_grid = [32, 64, 128]
+    norm_grid = [None, "batchnorm"]        # uitbreiding
+    # dropout_grid = [0.0, 0.2]             # optioneel (later)
 
     all_results: list[dict] = []
 
-    for lr, fc_units in itertools.product(lr_grid, fc_units_grid):
-        cfg = replace(base_cfg, lr=lr, fc_units=fc_units)
-        run_name = f"lr={lr}_fc={fc_units}"
+    for lr, fc_units, norm in itertools.product(
+        lr_grid, fc_units_grid, norm_grid
+    ):
+        cfg = replace(
+            base_cfg,
+            lr=lr,
+            fc_units=fc_units,
+            norm=norm,
+        )
+
+        run_name = f"lr={lr}_fc={fc_units}_norm={norm}"
         print(f"\n=== RUN {run_name} ===")
 
         res = run_training(cfg, run_name=run_name)
         all_results.append(res)
 
-        print(f"best_val_acc={res['best_val_acc']:.3f} | best_val_loss={res['best_val_loss']:.3f}")
+        print(
+            f"best_val_acc={res['best_val_acc']:.3f} | "
+            f"best_val_loss={res['best_val_loss']:.3f}"
+        )
 
     df = pd.DataFrame(all_results).sort_values("best_val_acc", ascending=False)
     out_csv = results_dir / "metrics.csv"
@@ -46,7 +60,9 @@ def main() -> None:
 
     print(f"\nWrote results to: {out_csv.resolve()}")
     print("Top 5 configs:")
-    print(df[["run_name", "best_val_acc", "lr", "fc_units"]].head(5).to_string(index=False))
+    print(df[["run_name", "best_val_acc", "lr", "fc_units", "norm"]]
+          .head(5)
+          .to_string(index=False))
 
 
 if __name__ == "__main__":
