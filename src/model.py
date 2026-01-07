@@ -8,13 +8,28 @@ from torch import nn
 @dataclass(frozen=True)
 class ModelConfig:
     num_classes: int
-    base_channels: int = 16   # bepaalt model "breedte"
-    fc_units: int = 64        # hidden units in classifier
+    base_channels: int = 16
+    fc_units: int = 64
     dropout: float = 0.0
+    norm: str | None = None   # None | "batchnorm" | "layernorm"
+
+
+def conv_norm(norm: str | None, channels: int) -> nn.Module:
+    if norm == "batchnorm":
+        return nn.BatchNorm2d(channels)
+    return nn.Identity()
+
+
+def linear_norm(norm: str | None, features: int) -> nn.Module:
+    if norm == "batchnorm":
+        return nn.BatchNorm1d(features)
+    if norm == "layernorm":
+        return nn.LayerNorm(features)
+    return nn.Identity()
 
 
 class SmallCNN(nn.Module):
-    """Kleine CNN voor 32x32 RGB (CIFAR-10)."""
+    """Kleine CNN voor 32x32 RGB (CIFAR)."""
 
     def __init__(self, cfg: ModelConfig) -> None:
         super().__init__()
@@ -22,17 +37,20 @@ class SmallCNN(nn.Module):
 
         self.features = nn.Sequential(
             nn.Conv2d(3, c, kernel_size=3, padding=1),
+            conv_norm(cfg.norm, c),
             nn.ReLU(),
-            nn.MaxPool2d(2),  # 32->16
+            nn.MaxPool2d(2),  # 32 -> 16
 
             nn.Conv2d(c, 2 * c, kernel_size=3, padding=1),
+            conv_norm(cfg.norm, 2 * c),
             nn.ReLU(),
-            nn.MaxPool2d(2),  # 16->8
+            nn.MaxPool2d(2),  # 16 -> 8
         )
 
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Linear((2 * c) * 8 * 8, cfg.fc_units),
+            linear_norm(cfg.norm, cfg.fc_units),
             nn.ReLU(),
             nn.Dropout(p=cfg.dropout),
             nn.Linear(cfg.fc_units, cfg.num_classes),
