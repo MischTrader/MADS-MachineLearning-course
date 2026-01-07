@@ -33,6 +33,7 @@ class TrainConfig:
     base_channels: int = 16
     fc_units: int = 64
     dropout: float = 0.0
+    norm: str | None = None
 
     # logging
     log_root: Path = Path("runs/grid")
@@ -96,6 +97,7 @@ def run_training(cfg: TrainConfig, run_name: str | None = None) -> dict:
         base_channels=cfg.base_channels,
         fc_units=cfg.fc_units,
         dropout=cfg.dropout,
+        norm=cfg.norm,          # <-- TOEGEVOEGD
     )
     model = SmallCNN(mcfg).to(device)
 
@@ -152,10 +154,9 @@ def run_training(cfg: TrainConfig, run_name: str | None = None) -> dict:
 
 
 def main() -> None:
-    cfg = TrainConfig(epochs=2)
+    cfg = TrainConfig(epochs=2, norm="batchnorm")
     res = run_training(cfg, run_name="single_run_check")
     print(res)
-
 
 if __name__ == "__main__":
     main()
