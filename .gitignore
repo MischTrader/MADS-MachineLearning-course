@@ -31,6 +31,7 @@ data/raw/*.arff
 
 # hypertuning, logs
 **/mlruns/*
+**/events.out.tfevents*
 **/models/
 **/modellogs/*
 **/modellog/*
