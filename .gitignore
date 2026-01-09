@@ -2,14 +2,16 @@
 __pycache__/
 *.egg-info/
 
-#TensorBoard logs
+# experiment outputs / logs
 runs/
+mlruns/
+**/events.out.tfevents*
 
 # exclude all datasets
 data/
 
 # exclude data
-data/external/**/*.gz
+data/external**/*.gz
 data/external/**/raw/**
 data/external/*.pt
 data/external/*.csv
