@@ -2,6 +2,20 @@
 __pycache__/
 *.egg-info/
 
+# Ray Tune / Ray results
+results/ex4_Ray/ray_results/
+**/ray_results/
+**/session_*/
+**/artifacts/
+
+# Ray Tune run artifacts
+**/tuner.pkl
+**/experiment_state*.json
+**/basic-variant-state*.json
+**/.validate_storage_marker
+**/error.pkl
+**/*.pkl
+
 # experiment outputs / logs
 runs/
 mlruns/
