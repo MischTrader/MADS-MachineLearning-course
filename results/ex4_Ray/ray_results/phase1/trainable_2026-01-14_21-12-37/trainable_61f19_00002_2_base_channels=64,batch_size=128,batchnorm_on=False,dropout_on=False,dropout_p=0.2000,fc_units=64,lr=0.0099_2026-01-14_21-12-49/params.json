@@ -1,0 +1,19 @@
+{
+  "activation": "relu",
+  "base_channels": 64,
+  "batch_size": 128,
+  "batchnorm_on": false,
+  "data_dir": "data/processed/cifar3",
+  "device": "auto",
+  "dropout_on": false,
+  "dropout_p": 0.2,
+  "epochs": 5,
+  "fc_units": 64,
+  "lr": 0.009859675133379911,
+  "n_conv": 3,
+  "num_classes": 3,
+  "optimizer": "adamw",
+  "seed": 42,
+  "skip_on": false,
+  "weight_decay": 1.6751454526183326e-05
+}

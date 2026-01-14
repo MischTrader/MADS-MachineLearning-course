@@ -1,0 +1,19 @@
+{
+  "activation": "relu",
+  "base_channels": 48,
+  "batch_size": 64,
+  "batchnorm_on": true,
+  "data_dir": "/home/mischatrader1/MADS/MADS-MachineLearning-course/data/processed/cifar3",
+  "device": "cpu",
+  "dropout_on": false,
+  "dropout_p": 0.4,
+  "epochs": 5,
+  "fc_units": 64,
+  "lr": 0.0003801618970901289,
+  "n_conv": 3,
+  "num_classes": 3,
+  "optimizer": "adamw",
+  "seed": 42,
+  "skip_on": true,
+  "weight_decay": 1.3302434929741177e-06
+}

@@ -1,0 +1,2 @@
+val_acc,val_loss,num_params,wall_time_s,timestamp,checkpoint_dir_name,done,training_iteration,trial_id,date,time_this_iter_s,time_total_s,pid,hostname,node_ip,time_since_restore,iterations_since_restore
+0.60625,0.8345437089602152,2446819,70.96846222877502,1768423615,,True,1,a27ee_00005,2026-01-14_21-46-55,71.0231728553772,71.0231728553772,84955,DESKTOP-2BD84IS,172.17.73.234,71.0231728553772,1

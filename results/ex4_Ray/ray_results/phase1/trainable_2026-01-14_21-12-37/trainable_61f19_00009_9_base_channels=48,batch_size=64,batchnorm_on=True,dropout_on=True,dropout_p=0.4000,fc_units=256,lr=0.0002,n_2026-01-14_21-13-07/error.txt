@@ -1,0 +1,27 @@
+Failure # 1 (occurred at 2026-01-14_21-13-14)
+[36mray::ImplicitFunc.train()[39m (pid=69391, ip=172.17.73.234, actor_id=398edb7695b421324890ada101000000, repr=trainable)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mischatrader1/MADS/MADS-MachineLearning-course/.venv/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 330, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/mischatrader1/MADS/MADS-MachineLearning-course/.venv/lib/python3.11/site-packages/ray/air/_internal/util.py", line 107, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mischatrader1/MADS/MADS-MachineLearning-course/.venv/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 45, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mischatrader1/MADS/MADS-MachineLearning-course/.venv/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 261, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/mischatrader1/MADS/MADS-MachineLearning-course/src_ray/hypertune.py", line 33, in trainable
+    res = run_train_eval(train_cfg=train_cfg, model_cfg=model_cfg)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mischatrader1/MADS/MADS-MachineLearning-course/src_ray/train.py", line 134, in run_train_eval
+    train_loader, val_loader, class_names = get_dataloaders(dl_cfg)
+                                            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/mischatrader1/MADS/MADS-MachineLearning-course/src_ray/data.py", line 79, in get_dataloaders
+    _assert_expected_structure(cfg.data_dir)
+  File "/home/mischatrader1/MADS/MADS-MachineLearning-course/src_ray/data.py", line 50, in _assert_expected_structure
+    raise FileNotFoundError(f"data_dir does not exist: {data_dir.resolve()}")
+FileNotFoundError: data_dir does not exist: /tmp/ray/session_2026-01-14_21-12-37_657446_67965/artifacts/2026-01-14_21-12-42/trainable_2026-01-14_21-12-37/working_dirs/trainable_61f19_00009_9_base_channels=48,batch_size=64,batchnorm_on=True,dropout_on=True,dropout_p=0.4000,fc_units=256,lr=0.0002,n_2026-01-14_21-13-07/data/processed/cifar3
