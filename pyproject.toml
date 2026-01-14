@@ -37,6 +37,9 @@ dependencies = [
     "torch-tb-profiler>=0.4.3",
     "tomlserializer>=0.2.0",
     "mltrainer>=0.2.4",
+    "pandas>=2.0.0",
+    "ray[tune]>=2.0.0",
+    "torchvision>=0.15.0",
 ]
 
 [project.optional-dependencies]
