@@ -5,8 +5,16 @@ __pycache__/
 # Ray Tune / Ray results
 results/ex4_Ray/ray_results/
 **/ray_results/
-**/session_*/
+**/.ray/
+**/ray/session_*/
 **/artifacts/
+
+# Ex4: ignore everything by default, only exports + plots are allowed
+results/ex4_Ray/**
+!results/ex4_Ray/exports/
+!results/ex4_Ray/exports/*.csv
+!results/ex4_Ray/plots/
+!results/ex4_Ray/plots/*.png
 
 # Ray Tune run artifacts
 **/tuner.pkl

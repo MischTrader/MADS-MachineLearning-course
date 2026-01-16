@@ -12,6 +12,8 @@ from ray.tune.schedulers import ASHAScheduler
 from src_ray.configs import ModelConfig, TrainConfig
 from src_ray.train import run_train_eval
 
+import pandas as pd
+
 def trainable(config: Dict[str, Any]) -> None:
     """
     Ray Tune trainable:
@@ -80,30 +82,57 @@ def run_phase1() -> None:
         ),
         run_config=RunConfig(storage_path=str(results_root.resolve())),
     )
+    
+    results = tuner.fit()
+    df = results.get_dataframe()
 
-    tuner.fit()
+    keep_cols = [
+    "val_acc", "val_loss", "num_params", "wall_time_s",
+    "trial_id", "trial_name", "status", "error",
+    "config/epochs", "config/batch_size", "config/lr", "config/weight_decay",
+    "config/n_conv", "config/base_channels", "config/fc_units",
+    "config/batchnorm_on", "config/dropout_on", "config/dropout_p", "config/skip_on",
+     ]
+    cols = [c for c in keep_cols if c in df.columns]
+    df_small = df[cols].copy()
+
+    export_dir = Path("results/ex4_Ray/exports")
+    export_dir.mkdir(parents=True, exist_ok=True)
+    out_csv = export_dir / "phase1.csv"
+    df_small.to_csv(out_csv, index=False)
+    print(f"[phase1] Wrote results to: {out_csv.resolve()}")
+
 
 def run_phase2() -> None:
     results_root = Path("results/ex4_Ray/ray_results/phase2")
     results_root.mkdir(parents=True, exist_ok=True)
 
     search_space: dict[str, Any] = {
+        # fixed, fair budget
         "epochs": 12,
+        # keep small variability here, optional
         "batch_size": tune.choice([64, 128]),
-        "lr": tune.loguniform(3e-4, 5e-3),
+        # refined LR region based on phase1 winners
+        "lr": tune.loguniform(1e-4, 5e-4),
+        # keep WD search reasonable
         "weight_decay": tune.loguniform(1e-6, 1e-3),
         "optimizer": tune.choice(["adamw"]),
         "device": "cpu",
         "seed": 42,
         "data_dir": str(Path("data/processed/cifar3").resolve()),
+
+        # model: focus region
         "num_classes": 3,
-        "n_conv": tune.choice([3]),
+        "n_conv": 3,  # fixed (no need for tune.choice([3]))
         "base_channels": tune.choice([48, 64]),
-        "fc_units": tune.choice([128, 256]),
+        "fc_units": tune.choice([64, 128]),
+
+        # hypotheses knobs
         "batchnorm_on": tune.choice([False, True]),
         "dropout_on": tune.choice([False, True]),
-        "dropout_p": tune.choice([0.1, 0.2, 0.3, 0.4]),
+        "dropout_p": tune.choice([0.2, 0.4]),
         "skip_on": tune.choice([False, True]),
+
         "activation": "relu",
     }
 
@@ -117,12 +146,29 @@ def run_phase2() -> None:
         run_config=RunConfig(storage_path=str(results_root.resolve())),
     )
 
-    tuner.fit()
+    results = tuner.fit()
+    df = results.get_dataframe()
+
+    keep_cols = [
+        "val_acc", "val_loss", "num_params", "wall_time_s",
+        "trial_id", "trial_name", "status", "error",
+        "config/epochs", "config/batch_size", "config/lr", "config/weight_decay",
+        "config/n_conv", "config/base_channels", "config/fc_units",
+        "config/batchnorm_on", "config/dropout_on", "config/dropout_p", "config/skip_on",
+    ]
+    cols = [c for c in keep_cols if c in df.columns]
+    df_small = df[cols].copy()
+
+    export_dir = Path("results/ex4_Ray/exports")
+    export_dir.mkdir(parents=True, exist_ok=True)
+    out_csv = export_dir / "phase2.csv"
+    df_small.to_csv(out_csv, index=False)
+    print(f"[phase2] Wrote results to: {out_csv.resolve()}")
 
 def main() -> None:
     # Minimal CLI switch via env var would be overkill; keep it simple:
     # Uncomment one at a time.
-    run_phase1()
+    run_phase2()
     # run_phase2()
 
 
